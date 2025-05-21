@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat12</title>
+  <link rel="stylesheet" href="chatstyle.css">
+  <style>
+    .evaluate-button {
+      margin-top: 1em;
+      padding: 0.8em 1.5em;
+      font-size: 1em;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+
+    .evaluate-button:hover {
+      background-color: #0056b3;
+    }
+
+    .form-container {
+      margin-top: 2em;
+      display: block;
+      text-align: center;
+    }
+
+    .form-container iframe {
+      width: 100%;
+      max-width: 800px;
+      height: 1200px;
+      border: none;
+    }
+
+    .next-container {
+      text-align: right;
+      margin-top: 2em;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="chat-box" style="text-align: center;">
+    <h2>印象評価</h2>
+    <img src="robot12.png" alt="キャラロボット" class="robot-img" style="max-width: 90%; max-height: 600px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+  </div>
+
+  <div class="form-container">
+    <iframe
+      id="googleForm"
+      src="https://docs.google.com/forms/d/e/1FAIpQLScwZ0H4dPBjQhWYTLUyJwnw5WZXBhQ0ohe4vpXzqh6cim_DiA/viewform?usp=header"
+      allowfullscreen></iframe>
+  </div>
+
+  <div class="next-container">
+    <button onclick="goToNextChat()" class="evaluate-button">次のRobot評価 →</button>
+  </div>
+
+  <script>
+    function goToNextChat() {
+      const queue = JSON.parse(localStorage.getItem('chatQueue') || '[]');
+      let index = parseInt(localStorage.getItem('chatIndex') || '0');
+      index++;
+
+      if (index >= queue.length) {
+        window.location.href = 'test02.html';
+      } else {
+        localStorage.setItem('chatIndex', index.toString());
+        window.location.href = queue[index];
+      }
+    }
+  </script>
+
+</body>
+</html>
+

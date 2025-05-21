@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>2025 Main Page TEST01</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', 'Segoe UI', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 2em auto;
+      padding: 1.5em;
+    }
+    .card {
+      background: white;
+      padding: 2em;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    h1, h2, h3 {
+      text-align: center;
+      margin-bottom: 1em;
+    }
+    .toggle-button {
+      background-color: #007bff;
+      color: white;
+      padding: 0.7em 1.4em;
+      font-size: 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 1em 0;
+      transition: background-color 0.3s ease;
+      font-family: inherit;
+    }
+    .toggle-button:hover {
+      background-color: #0056b3;
+    }
+    .toggle-content {
+      display: none;
+      text-align: left;
+      line-height: 1.8;
+      margin-top: 1em;
+    }
+    .toggle-content p {
+      margin-bottom: 1em;
+    }
+    .form-link {
+      text-align: center;
+      margin-top: 2em;
+    }
+    .form-link button {
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      padding: 0.8em 1.5em;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .form-link button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h2>EVALUATION</h2>
+      <h1>こんにちは！</h1>
+      <h3>20種のロボット印象を見て評価してください。</h3>
+      <p style="text-align: center;">※研究倫理審査の詳細を読んで、<br/>表示された「アンケートに進む」ボタンを押してはじめてください。</p>
+
+      <div style="text-align: center;">
+        <button class="toggle-button" onclick="toggleEthics()">▶ 【研究倫理審査の詳細】</button>
+      </div>
+
+      <div class="toggle-content" id="ethicsContent">
+        <section>
+          <p><strong>1. 研究の説明</strong><br>
+            本研究の目的は、ロボットの動物らしさ、知能、技術力、親しみやすさ、信頼性について評価を行うことです。<br>
+            調査では、動物の印象を持つ9つのロボット画像を提示し、所要時間は約5分です。
+          </p>
+          <p><strong>2. 倫理的配慮に関すること</strong><br>
+            アンケート項目には、不快な感情を抱かせるような内容が含まれないよう十分に配慮しています。
+          </p>
+          <p><strong>3. 本人の自由意志による同意であること</strong><br>
+            本アンケートは匿名での回答が可能です。調査を開始するボタンを押した時点で、研究参加に同意したとみなされます。
+          </p>
+          <p><strong>4. 同意後も不利益を受けず随時撤回できること</strong><br>
+            万が一、不快に感じたり、体調の不良を感じた場合は、速やかに調査を中止してください。
+          </p>
+          <p><strong>5. 同意しない場合でも不利益を受けないこと</strong><br>
+            同意しない場合でも、一切の不利益を受けることはありません。また、参加に同意した後でも、いつでも自由に参加を取りやめることができます。
+          </p>
+          <p><strong>6. 個人情報は保護されること</strong><br>
+            取得したデータは匿名化された形式で記録され、筑波大学の研究倫理に関する諸規定に基づき厳重に保管されます。
+          </p>
+          <p><strong>【研究責任者】</strong><br>
+            筑波大学芸術系 教授 小山慎一<br>
+            TEL: 029-853-2853<br>
+            Email: skoyama@geijutsu.tsukuba.ac.jp
+          </p>
+          <p><strong>【説明者】</strong><br>
+            筑波大学 デザイン学学位プログラム 博士後期課程 2年 KIM DOKYUNG<br>
+            Email: s2430497@u.tsukuba.ac.jp
+          </p>
+        </section>
+      </div>
+
+      <div class="form-link">
+        <button onclick="startEvaluation()">アンケートに進む</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleEthics() {
+      const content = document.getElementById('ethicsContent');
+      content.style.display = (content.style.display === 'block') ? 'none' : 'block';
+    }
+
+    function startEvaluation() {
+      const phase1 = Array.from({ length: 20 }, (_, i) => `chat${String(i + 1).padStart(2, '0')}.html`);
+      const phase2 = Array.from({ length: 20 }, (_, i) => `chat${String(i + 1).padStart(3, '0')}.html`);
+
+      const fullQueue = [];
+      const shuffled1 = phase1.sort(() => Math.random() - 0.5);
+      const shuffled2 = phase2.sort(() => Math.random() - 0.5);
+
+      fullQueue.push(...shuffled1);
+      fullQueue.push(...shuffled2);
+
+      localStorage.setItem('chatQueue', JSON.stringify(fullQueue));
+      localStorage.setItem('chatIndex', '0');
+      window.location.href = fullQueue[0];
+    }
+  </script>
+</body>
+</html>

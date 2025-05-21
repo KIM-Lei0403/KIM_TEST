@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat020</title>
+  <link rel="stylesheet" href="plusstyle.css">
+  <style>
+    body {
+      font-family: 'Helvetica Neue', 'Segoe UI', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    .chat-box {
+      max-width: 800px;
+      margin: auto;
+      padding: 1em;
+    }
+
+    .chat-line {
+      margin-bottom: 1em;
+    }
+
+    .chat-bubble {
+      padding: 0.8em 1.2em;
+      border-radius: 18px;
+      font-size: 15px;
+      max-width: 80%;
+      display: inline-block;
+      line-height: 1.5;
+    }
+
+    .chat-line.bot {
+      text-align: left;
+    }
+
+    .chat-line.bot .chat-bubble {
+      background-color: #e1ecf7;
+      color: black;
+    }
+
+    .chat-line.user {
+      text-align: right;
+    }
+
+    .chat-line.user .chat-bubble {
+      background-color: #007bff;
+      color: white;
+      border-bottom-right-radius: 0;
+    }
+
+    .chat-line.error .chat-bubble {
+      background-color: #ffd6d6;
+      color: black;
+      border-left: 6px solid #f44336;
+    }
+
+    .form-container {
+      text-align: center;
+      margin-top: 2em;
+      display: none;
+    }
+
+    .form-container iframe {
+      width: 100%;
+      max-width: 800px;
+      height: 1200px;
+      border: none;
+    }
+
+    .next-btn-container {
+      text-align: center;
+      margin: 2em 0;
+    }
+
+    .next-btn {
+      padding: 0.7em 1.4em;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .evaluate-button {
+      margin-top: 2em;
+      padding: 0.6em 1.4em;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .robot-eval-img {
+      max-width: 200px;
+      border-radius: 20px;
+      margin: 1em auto;
+      display: block;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="chat-box">
+    <h2 style="text-align: center;">「第二幕」</br>会話を含めて印象評価</h2>
+    <h5 style="text-align: center;">これからは、会話をよく読んで、改めて評価してください。</h5>
+
+    <img src="robot20.png" alt="ロボット画像" class="robot-eval-img">
+    <div id="chat"></div>
+
+    <!-- 評価する 버튼: 대화 종료 후 표시 -->
+    <div style="text-align: center;">
+      <button id="evaluateBtn" class="evaluate-button" style="display: none;" onclick="showForm()">評価する</button>
+    </div>
+  </div>
+
+  <!-- 평가 폼 (처음에는 숨김) -->
+  <div class="form-container" id="formContainer">
+    <iframe
+      id="googleForm"
+      src="https://docs.google.com/forms/d/e/1FAIpQLSeHDDTdegERy-q2cIo68h6yj1kKD73Nd03aN9-1zPnYDHll8A/viewform?usp=header"
+      allowfullscreen></iframe>
+  </div>
+
+  <!-- 다음 로봇 평가 버튼 -->
+  <div class="next-btn-container">
+    <button class="next-btn" onclick="goToNext()">次のRobot評価 →</button>
+  </div>
+
+  <script>
+    const autoDialogue = [
+      { type: "bot", text: "🤖 こんにちは！今日はあなたと話せてうれしいです。" },
+      { type: "user", text: "🧑 よろしくね" },
+      { type: "bot", text: "🤖 はい、とても元気です！あなたはどうですか？" },
+      { type: "user", text: "🧑 ちょっと疲れてるかも" },
+      { type: "bot", text: "🤖 それはよかったです。どんなことに興味がありますか？" },
+      { type: "user", text: "🧑 いろいろ聞きたい" },
+      { type: "error", text: "🤖 想定外の入力を検出。処理分岐が無効化されました。現在リカバリー中です" }
+    ];
+
+    const chatBox = document.getElementById("chat");
+    const evaluateBtn = document.getElementById("evaluateBtn");
+    const formContainer = document.getElementById("formContainer");
+
+    function appendBubble(text, className) {
+      const line = document.createElement("div");
+      line.className = `chat-line ${className}`;
+      const bubble = document.createElement("div");
+      bubble.className = "chat-bubble";
+      bubble.textContent = text;
+      line.appendChild(bubble);
+      chatBox.appendChild(line);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function runDialogue(index = 0) {
+      if (index >= autoDialogue.length) {
+        evaluateBtn.style.display = "inline-block"; // 대화 종료 후 평가 버튼 표시
+        return;
+      }
+      const { type, text } = autoDialogue[index];
+      const delay = type === "bot" ? 500 : 300;
+      setTimeout(() => {
+        appendBubble(text, type);
+        runDialogue(index + 1);
+      }, delay);
+    }
+
+    function showForm() {
+      formContainer.style.display = "block";
+      evaluateBtn.style.display = "none";
+      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+    }
+
+    function goToNext() {
+      const queue = JSON.parse(localStorage.getItem('chatQueue') || '[]');
+      let index = parseInt(localStorage.getItem('chatIndex') || '0');
+      index++;
+      if (index >= queue.length) {
+        window.location.href = 'test02.html';
+      } else {
+        localStorage.setItem('chatIndex', index.toString());
+        window.location.href = queue[index];
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      runDialogue();
+    });
+  </script>
+</body>
+</html>

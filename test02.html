@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>2025 Main Page TEST02</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', 'Segoe UI', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 3em auto;
+      padding: 2em;
+    }
+
+    .card {
+      background: white;
+      padding: 3em 2em;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 28px;
+      color: #333;
+    }
+
+    h3 {
+      font-size: 18px;
+      color: #555;
+      margin-top: 1.5em;
+    }
+
+    .home-button {
+      margin-top: 2.5em;
+    }
+
+    .home-button a {
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      padding: 0.9em 1.8em;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      display: inline-block;
+    }
+
+    .home-button a:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>お疲れ様でした！</h1>
+      <h3>全てのロボット評価が完了しました。<br>ご協力いただき誠にありがとうございました。</h3>
+
+      <div class="home-button">
+        <a href="test01.html">最初に戻る</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 실험 종료 후 로컬 데이터 삭제
+    localStorage.removeItem('chatQueue');
+    localStorage.removeItem('chatIndex');
+  </script>
+</body>
+</html>
